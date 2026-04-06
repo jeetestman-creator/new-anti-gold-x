@@ -2,7 +2,6 @@ import type { Config } from "tailwindcss";
 
 import tailwindAnimate from "tailwindcss-animate";
 import containerQuery from "@tailwindcss/container-queries";
-import intersect from "tailwindcss-intersect";
 
 const config: Config = {
   darkMode: ["class"],
@@ -174,7 +173,6 @@ const config: Config = {
   plugins: [
     tailwindAnimate,
     containerQuery,
-    intersect,
 
     function ({ addUtilities }) {
       addUtilities(
