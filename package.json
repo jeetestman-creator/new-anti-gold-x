@@ -1,12 +1,13 @@
 {
   "name": "gold-x-usdt-admin",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build --config vite.config.prod.ts",
     "preview": "vite preview --config vite.config.prod.ts",
-    "lint": "npx biome lint .; tsc -b",
+    "lint": "npx biome lint . && tsc -b",
     "type-check": "tsc -b"
   },
   "dependencies": {
@@ -51,29 +52,27 @@
     "eventsource-parser": "^3.0.6",
     "html2canvas": "^1.4.1",
     "input-otp": "^1.4.2",
-    "jspdf": "^4.2.1",
+    "jspdf": "^2.5.1",
     "ky": "^1.13.0",
-    "lucide-react": "^0.576.0",
+    "lucide-react": "^0.376.0",
     "motion": "^12.23.25",
     "next-themes": "^0.4.6",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
-    "react": "^19.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-d3-tree": "^3.6.6",
     "react-day-picker": "^9.13.0",
-    "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.66.0",
     "react-resizable-panels": "^2.1.8",
-    "react-router": "^7.9.5",
-    "react-router-dom": "^7.9.5",
-    "recharts": "2.15.4",
+    "react-router-dom": "^6.26.0",
+    "recharts": "^2.15.4",
     "sonner": "^2.0.7",
     "streamdown": "^1.4.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "tailwindcss-intersect": "^2.2.0",
     "vaul": "^1.1.2",
     "video-react": "^0.16.0",
     "zod": "^3.25.76"
@@ -83,8 +82,8 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/lodash": "^4.17.24",
     "@types/qrcode": "^1.5.6",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
     "@types/video-react": "^0.15.8",
     "@vitejs/plugin-react": "^5.1.4",
     "autoprefixer": "^10.4.27",
@@ -95,12 +94,3 @@
     "vite-plugin-svgr": "^4.5.0"
   }
 }
-{
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-helmet-async": "^2.0.5",
-    ...
-  }
-}
-
