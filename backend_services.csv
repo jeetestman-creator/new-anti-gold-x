@@ -1,0 +1,45 @@
+Category,Name,Description,Details
+Database Table,profiles,Stores user profile information and wallet balances,"Fields: id, email, full_name, phone, country_code, address, city, state, country, postal_code, deposit_balance, roi_balance, bonus_balance, withdrawal_balance, total_invested, total_withdrawn, total_roi_earned, total_referral_earned, last_roi_credit_at, referral_code, referred_by, referral_level, performance_level, performance_points, active_referrals, coupon_count, kyc_status, kyc_document_url, kyc_submitted_at, kyc_verified_at, is_active, is_admin, email_verified, created_at, updated_at"
+Database Table,transactions,Records all financial transactions,"Fields: id, user_id, type, amount, fee, net_amount, status, tx_hash, network, admin_note, processed_at, created_at, updated_at"
+Database Table,referrals,Tracks multi-level referral relationships,"Fields: id, referrer_id, referred_id, level, commission_earned, status, created_at"
+Database Table,notifications,User notifications,"Fields: id, user_id, title, message, type, is_read, created_at"
+Database Table,support_tickets,Support ticket management,"Fields: id, user_id, email, subject, message, status, priority, created_at, updated_at"
+Database Table,platform_settings,Global platform configuration,"Fields: key, value, description, updated_at"
+Edge Function,send-otp,Sends OTP verification code via email,Endpoint: POST /functions/v1/send-otp | Params: email purpose
+Edge Function,verify-otp,Verifies OTP code,Endpoint: POST /functions/v1/verify-otp | Params: email otp purpose
+Edge Function,create-user,Creates a new user account after OTP verification,Endpoint: POST /functions/v1/create-user | Params: email password full_name referral_code
+Edge Function,activate-account,Activates user account via email verification link,Endpoint: POST /functions/v1/activate-account | Params: token
+Edge Function,send-auth-link,Sends magic link for passwordless authentication,Endpoint: POST /functions/v1/send-auth-link | Params: email
+Edge Function,reset-password-otp,Initiates password reset with OTP,Endpoint: POST /functions/v1/reset-password-otp | Params: email otp new_password
+Edge Function,reset-password-token,Resets password using token from email link,Endpoint: POST /functions/v1/reset-password-token | Params: token new_password
+Edge Function,verify-transaction,Verifies blockchain transaction hash for deposits,Endpoint: POST /functions/v1/verify-transaction | Params: transaction_hash network amount
+Edge Function,monthly-interest-credit,Automated daily function to credit 10% monthly ROI,Trigger: Cron (0 0 * * *) | Daily calculation and credit
+Edge Function,process-auto-withdrawals,Processes approved withdrawals hourly,Trigger: Cron (0 * * * *) | Checks cooling periods and transfers funds
+Edge Function,delete-user,Admin function to delete user account,Endpoint: POST /functions/v1/delete-user | Params: user_id | Auth: Admin
+Edge Function,test-email,Test email functionality,Endpoint: POST /functions/v1/test-email | Params: to subject body
+RLS Policy,Users can view own profile,Restrict profiles visibility,"Table: profiles | SELECT | auth.uid() = id"
+RLS Policy,Users can update own profile,Restrict profiles editing,"Table: profiles | UPDATE | auth.uid() = id"
+RLS Policy,Admins can view all profiles,Grant admin full read access,"Table: profiles | SELECT | auth.uid() is admin"
+RLS Policy,Admins can update all profiles,Grant admin full write access,"Table: profiles | UPDATE | auth.uid() is admin"
+RLS Policy,Users can view own transactions,Restrict transactions visibility,"Table: transactions | SELECT | auth.uid() = user_id"
+RLS Policy,Users can create transactions,Allow deposit/withdrawal requests,"Table: transactions | INSERT | auth.uid() = user_id"
+RLS Policy,Admins can view all transactions,Grant admin full read access,"Table: transactions | SELECT | auth.uid() is admin"
+RLS Policy,Admins can update transactions,Grant admin full write access,"Table: transactions | UPDATE | auth.uid() is admin"
+RLS Policy,Users can view own referrals,Restrict referrals visibility,"Table: referrals | SELECT | auth.uid() in (referrer_id referred_id)"
+RLS Policy,Admins can view all referrals,Grant admin full read access,"Table: referrals | SELECT | auth.uid() is admin"
+RLS Policy,Users can view own notifications,Restrict notifications visibility,"Table: notifications | SELECT | auth.uid() = user_id"
+RLS Policy,Users can update own notifications,Restrict notifications editing,"Table: notifications | UPDATE | auth.uid() = user_id"
+RLS Policy,Admins can create notifications,Allow admin to send notifications,"Table: notifications | INSERT | auth.uid() is admin"
+RLS Policy,Anyone can create tickets,Allow public support requests,"Table: support_tickets | INSERT | true"
+RLS Policy,Users can view own tickets,Restrict tickets visibility,"Table: support_tickets | SELECT | auth.uid() = user_id OR email = auth.email()"
+RLS Policy,Admins can view all tickets,Grant admin full read access,"Table: support_tickets | SELECT | auth.uid() is admin"
+RLS Policy,Admins can update tickets,Grant admin full write access,"Table: support_tickets | UPDATE | auth.uid() is admin"
+RLS Policy,Anyone can read settings,Allow public settings access,"Table: platform_settings | SELECT | true"
+RLS Policy,Admins can update settings,Grant admin full write access,"Table: platform_settings | UPDATE | auth.uid() is admin"
+Secret,ZOHO_API_KEY,API key for Zoho Mail email service,Used for all email communications
+Secret,ZOHO_SMTP_HOST,SMTP host for Zoho Mail email service,Host: smtp.zoho.com
+Secret,ZOHO_FROM_EMAIL,Sender email address,Default: noreply@goldxusdt.com
+Env Var,VITE_SUPABASE_URL,Supabase project URL,https://gtbptywlxhleadgabivi.supabase.co
+Env Var,VITE_SUPABASE_ANON_KEY,Supabase public anon key,Used for frontend authentication
+Env Var,VITE_APP_NAME,Application display name,Default: Gold X Usdt
+Env Var,VITE_APP_URL,Production application URL,Used for redirects and emails
