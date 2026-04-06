@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Observer } from 'tailwindcss-intersect';
 
 const IntersectObserver = () => {
   const location = useLocation();
