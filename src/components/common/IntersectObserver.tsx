@@ -5,14 +5,36 @@ const IntersectObserver = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // When the location changes, we need to restart the observer
-    // to pick up new elements on the page.
-    // We use a small timeout to ensure the DOM has updated.
+    let observer: IntersectionObserver | null = null;
+
+    const initObserver = () => {
+      const elements = document.querySelectorAll('.observe');
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+        }
+      );
+
+      elements.forEach((el) => observer?.observe(el));
+    };
+
+    // Delay to ensure DOM is ready after route change
     const timer = setTimeout(() => {
-        Observer.restart();
+      initObserver();
     }, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      observer?.disconnect();
+    };
   }, [location]);
 
   return null;
