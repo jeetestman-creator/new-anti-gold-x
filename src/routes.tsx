@@ -63,8 +63,7 @@ const routes: RouteConfig[] = [
   { name: 'Deposit', path: '/deposit', element: <DepositPage /> },
   { name: 'Withdrawal', path: '/withdrawal', element: <WithdrawalPage /> },
   { name: 'Referrals', path: '/referrals', element: <ReferralsPage /> },
-  // FIX #7: Changed duplicate /analytics route to /downline-analytics
-  { name: 'Downline Analytics', path: '/downline-analytics', element: <DownlineAnalyticsPage /> },
+  { name: 'Analytics', path: '/analytics', element: <DownlineAnalyticsPage /> },
   { name: 'Profile', path: '/profile', element: <ProfilePage /> },
   { name: 'Transactions', path: '/transactions', element: <TransactionsPage /> },
   { name: 'Support', path: '/support', element: <SupportPage /> },
