@@ -51,7 +51,7 @@ export default function SignupPage() {
 
   useEffect(() => {
     trackFunnelStep('signup_page_view', 2);
-  }, [trackFunnelStep]); // FIX: Added missing dependency
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,11 +174,9 @@ export default function SignupPage() {
 
       toast.success(otpData?.message || 'OTP code sent to your email. Please check your inbox.');
       setStep('otp');
-      // FIX #5: Proper error typing
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP code';
+    } catch (error: any) {
       console.error('Failed to send OTP:', error);
-      toast.error(errorMessage);
+      toast.error(error.message || 'Failed to send OTP code');
     } finally {
       setLoading(false);
     }
@@ -225,11 +223,9 @@ export default function SignupPage() {
       
       // Navigate to login
       navigate('/login');
-      // FIX #5: Proper error typing
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Verification failed';
+    } catch (error: any) {
       console.error('Failed to verify OTP:', error);
-      toast.error(errorMessage);
+      toast.error(error.message || 'Verification failed');
     } finally {
       setLoading(false);
     }
@@ -267,11 +263,9 @@ export default function SignupPage() {
       }
 
       toast.success(data?.message || 'OTP code resent to your email');
-      // FIX #5: Proper error typing
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to resend OTP';
+    } catch (error: any) {
       console.error('Failed to resend OTP:', error);
-      toast.error(errorMessage);
+      toast.error(error.message || 'Failed to resend OTP');
     } finally {
       setLoading(false);
     }
@@ -382,8 +376,7 @@ export default function SignupPage() {
                     required
                     disabled={loading}
                     pattern="[\d+\s]+"
-                    // FIX #6: Updated title to match actual regex
-                    title="Please enter phone number (numbers, +, and spaces only)"
+                    title="Please enter numbers only"
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
