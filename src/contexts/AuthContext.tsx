@@ -67,10 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setProfile(profileData);
         }
       })
-      .catch((error: unknown) => {
-        // FIX #1: Proper error handling without @ts-ignore
-        const message = error instanceof Error ? error.message : 'Failed to get user session';
-        toast.error(`Failed to get user session: ${message}`);
+      .catch(error => {
+        // @ts-ignore
+        toast.error(`Failed to get user session: ${error.message}`);
       })
       .finally(() => {
         setLoading(false);
@@ -100,9 +99,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // If user was created in the last 2 minutes, try to attribute referral
                 if (now - userCreated < 120000) {
                   supabase.from('profiles').select('id').eq('referral_code', ref).maybeSingle().then(({ data: referrer }) => {
-                    // FIX #2: Proper type checking instead of unsafe casts
-                    if (referrer && 'id' in referrer) {
-                      supabase.from('profiles').update({ referrer_id: (referrer as any).id }).eq('id', session.user.id).then(() => {
+                    if (referrer) {
+                      (supabase.from('profiles') as any).update({ referrer_id: (referrer as any).id }).eq('id', session.user.id).then(() => {
                         console.log('Referral attributed successfully');
                         sessionStorage.removeItem('referral_code');
                         refreshProfile();
@@ -125,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, [trackSignIn, trackSignUp]); // FIX #3: Added missing dependencies
+  }, []);
 
   const signInWithEmail = async (email: string, password: string) => {
     try {
@@ -197,6 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         trackSignUp('email');
         supabase
           .from('profiles')
+          // @ts-ignore - Supabase type inference issue
           .update({
             full_name: additionalData.full_name,
             phone: additionalData.phone,
@@ -226,8 +225,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         // Provide more helpful error for disabled providers
         if (error.message.includes('provider is not enabled') || error.message.includes('Unsupported provider')) {
-          // FIX #4: Complete the error message
-          throw new Error('Google Sign-In is not currently enabled. Please enable it in the Supabase Dashboard.');
+          throw new Error('Google Sign-In is not currently enabled for this platform. Please enable it in the Supabase Dashboard using Client ID: 177188909353-25feb1b7el138ljg1r1ch1oc1j2g73cl.apps.googleusercontent.com');
         }
         throw error;
       }
@@ -256,7 +254,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const resendOTP = async (email: string, purpose: 'signup' | 'login' | 'password_reset' = 'signup', userData?: unknown) => {
+  const resendOTP = async (email: string, purpose: 'signup' | 'login' | 'password_reset' = 'signup', userData?: any) => {
     try {
       const { error } = await supabase.functions.invoke('send-otp', {
         body: { email, purpose, userData }
